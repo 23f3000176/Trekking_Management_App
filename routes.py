@@ -1,9 +1,12 @@
-from flask import render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template
 
-from models import User, Trek, Booking
+main = Blueprint("main", __name__)
 
-from app import app
 
-@app.route("/")
+@main.route("/")
 def home():
     return render_template("home.html")
+
+@main.route("/login")
+def login():
+    return render_template("login.html")
