@@ -20,8 +20,20 @@ import models
 with app.app_context():
     db.create_all()
 
+    admin=models.User.query.filter_by(username="admin").first()
+    if not admin:
+        admin = models.User(
+            username="admin",
+            password="admin123",
+            name="Admin User",
+            role="admin",
+        )
+        db.session.add(admin)
+        db.session.commit()
 
 from routes import main
+
+
 
 
 app.register_blueprint(main)

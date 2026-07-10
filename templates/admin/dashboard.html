@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}
+Admin Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <h2 class="mb-4">
+        Admin Dashboard
+    </h2>
+    <a href="{{ url_for('main.add_trek') }}"
+       class="btn btn-primary mb-4">
+        + Add Trek
+    </a>
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <div class="card text-bg-primary shadow">
+                <div class="card-body">
+                    <h5>Total Users</h5>
+                    <h2>{{ total_users }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-bg-success shadow">
+                <div class="card-body">
+                    <h5>Total Staff</h5>
+                    <h2>{{ total_staff }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-bg-warning shadow">
+                <div class="card-body">
+                    <h5>Total Treks</h5>
+                    <h2>{{ total_treks }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-bg-danger shadow">
+                <div class="card-body">
+                    <h5>Total Bookings</h5>
+                    <h2>{{ total_bookings }}</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

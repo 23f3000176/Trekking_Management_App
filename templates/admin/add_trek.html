@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Trek
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <h2>Add Trek</h2>
+
+    <form method="POST" action="{{ url_for('main.add_trek_post') }}">
+
+        <div class="mb-3">
+            <label>Trek Name</label>
+            <input
+                type="text"
+                class="form-control"
+                name="name"
+                required>
+        </div>
+
+        <div class="mb-3">
+            <label>Location</label>
+            <input
+                type="text"
+                class="form-control"
+                name="location"
+                required>
+        </div>
+
+        <div class="mb-3">
+            <label>Difficulty</label>
+
+            <select
+                class="form-select"
+                name="difficulty">
+
+                <option>Easy</option>
+                <option>Medium</option>
+                <option>Hard</option>
+
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Duration</label>
+
+            <input
+                type="text"
+                class="form-control"
+                name="duration">
+        </div>
+
+        <div class="mb-3">
+            <label>Price</label>
+
+            <input
+                type="number"
+                class="form-control"
+                name="price">
+        </div>
+
+        <div class="mb-3">
+            <label>Available Slots</label>
+
+            <input
+                type="number"
+                class="form-control"
+                name="available_slots">
+        </div>
+
+        <div class="mb-3">
+            <label>Assign Staff</label>
+
+            <select
+                class="form-select"
+                name="assigned_staff">
+
+                {% for person in staff %}
+
+                <option value="{{ person.id }}">
+                    {{ person.name }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <div class="mb-3">
+
+            <label>Status</label>
+
+            <select
+                class="form-select"
+                name="status">
+
+                <option>Open</option>
+                <option>Closed</option>
+
+            </select>
+
+        </div>
+
+        <button
+            class="btn btn-success">
+
+            Add Trek
+
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

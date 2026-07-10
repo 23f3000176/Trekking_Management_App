@@ -1,4 +1,5 @@
 from extensions import db
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(db.Model):
@@ -9,7 +10,7 @@ class User(db.Model):
     passhash = db.Column(db.String(200), nullable=False)
     name = db.Column(db.String(50), nullable=False)
     role = db.Column(db.String(20), nullable=False)
-
+    
     bookings = db.relationship("Booking", backref="user", lazy=True)
     staff_profile = db.relationship(
         "StaffProfile",
@@ -24,7 +25,7 @@ class User(db.Model):
     def password(self, password):
         self.passhash = generate_password_hash(password) 
     def check_password(self, password):
-        return self.passhash== check_password_hash(self.passhash, password)
+        return check_password_hash(self.passhash, password)
 
 
 class Trek(db.Model):
@@ -36,7 +37,9 @@ class Trek(db.Model):
     difficulty = db.Column(db.String(50), nullable=False)
     duration = db.Column(db.String(50), nullable=False)
     price = db.Column(db.Float, nullable=False)
-
+    available_slots = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.String(20), nullable=False, default="open")
+    assigned_staff_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
     bookings = db.relationship("Booking", backref="trek", lazy=True)
 
 

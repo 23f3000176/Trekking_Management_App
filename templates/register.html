@@ -3,29 +3,29 @@
 
 {% block content %}
     <h1>Register</h1>
-    <form>
+    <form method="POST" action="{{ url_for('main.register_post') }}">
         <div class="mb-3">
             <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username" aria-describedby="emailHelp">
+            <input type="text" class="form-control" id="username" name="username" aria-describedby="emailHelp">
             <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password">
+            <input type="password" class="form-control" id="password" name="password">
         </div>
         <div class="mb-3">
             <label for="name" class="form-label">Name</label>
-            <input type="text" class="form-control" id="name">
+            <input type="text" class="form-control" id="name" name="name">
         </div>
 
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="radioDefault" id="radioDefault1">
-            <label class="form-check-label" for="radioDefault1">
+            <input class="form-check-input" type="radio" name="role" value="staff" id="radioDefault1">
+            <label class="form-check-label" for="radioDefault1" >
                 Staff
             </label>
             </div>
             <div class="form-check">
-            <input class="form-check-input" type="radio" name="radioDefault" id="radioDefault2" checked>
+            <input class="form-check-input" type="radio" name="role" value="customer" id="radioDefault2" checked>
             <label class="form-check-label" for="radioDefault2">
                 customer
             </label>
