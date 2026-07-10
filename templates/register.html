@@ -1,9 +1,8 @@
 {% extends "base.html" %}
-
-{% block title %}Login{% endblock %}
+{% block title %}Register{% endblock %}
 
 {% block content %}
-    <h1>Login</h1>
+    <h1>Register</h1>
     <form>
         <div class="mb-3">
             <label for="username" class="form-label">Username</label>
@@ -14,8 +13,25 @@
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control" id="password">
         </div>
-        
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name">
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="radioDefault" id="radioDefault1">
+            <label class="form-check-label" for="radioDefault1">
+                Staff
+            </label>
+            </div>
+            <div class="form-check">
+            <input class="form-check-input" type="radio" name="radioDefault" id="radioDefault2" checked>
+            <label class="form-check-label" for="radioDefault2">
+                customer
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Register</button>
     </form>
 {% endblock %}
 

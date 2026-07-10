@@ -1,0 +1,62 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm">
+    <div class="container-fluid">
+
+        <a class="navbar-brand" href="{{ url_for('main.home') }}">
+            Just <span class="trek-logo">Trek</span>
+        </a>
+
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('main.login') }}">Login</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.register') }}">Register</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle"
+                       href="#"
+                       role="button"
+                       data-bs-toggle="dropdown">
+                        More
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Destinations</a></li>
+                        <li><a class="dropdown-item" href="#">Contact</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <form class="d-flex ms-auto" role="search">
+                <input class="form-control me-2"
+                       type="search"
+                       placeholder="Search Trek">
+
+                <button class="btn btn-success">
+                    Search
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+</nav>
+
+<style>
+    .navbar{
+        width: 100%;
+        padding: 0px ;
+
+    }
+</style>

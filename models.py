@@ -17,6 +17,15 @@ class User(db.Model):
         uselist=False,
     )
 
+    @property
+    def password(self):
+        raise AttributeError("Password is not a readable attribute")
+    @password.setter
+    def password(self, password):
+        self.passhash = generate_password_hash(password) 
+    def check_password(self, password):
+        return self.passhash== check_password_hash(self.passhash, password)
+
 
 class Trek(db.Model):
     __tablename__ = "treks"
@@ -68,3 +77,5 @@ class StaffProfile(db.Model):
     phone = db.Column(db.String(15), nullable=False)
     experience = db.Column(db.String(50))
     specialization = db.Column(db.String(100))
+
+    
