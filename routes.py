@@ -33,6 +33,7 @@ def login_post():
         return render_template("login.html")
     # Login successful
     session["user_id"] = user.id
+    session["role"] = user.role
     if user.role == "admin":
         return redirect(url_for("main.admin_dashboard"))
 
@@ -81,6 +82,10 @@ def logout():
 @main.route("/admin/dashboard")
 def admin_dashboard():
 
+    if session.get("role") != "admin":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
     total_users = User.query.filter_by(role="customer").count()
 
     total_staff = User.query.filter_by(role="staff").count()
@@ -102,10 +107,16 @@ def admin_dashboard():
 #admin - treks management-----------------------------
 @main.route("/admin/add_trek")
 def add_trek():
+    if session.get("role") != "admin":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
     return render_template("admin/add_trek.html")
 
 @main.route("/admin/add_trek", methods=["POST"])
 def add_trek_post():
+    if session.get("role") != "admin":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
 
     name = request.form.get("name")
     location = request.form.get("location")
@@ -133,3 +144,68 @@ def add_trek_post():
     flash("Trek Added Successfully")
 
     return redirect(url_for("main.admin_dashboard"))
+
+
+@main.route("/admin/view_treks")
+def view_treks():
+    if session.get("role") != "admin":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    treks = Trek.query.all()
+
+    return render_template("admin/view_treks.html",treks=treks)
+
+@main.route("/admin/edit_trek/<int:trek_id>")
+def edit_trek(trek_id):
+    if session.get("role") != "admin":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    trek = Trek.query.get_or_404(trek_id)
+
+    staff = User.query.filter_by(role="staff").all()
+
+    return render_template(
+        "admin/edit_trek.html",
+        trek=trek,
+        staff=staff
+    )
+
+@main.route("/admin/edit_trek/<int:trek_id>", methods=["POST"])
+def edit_trek_post(trek_id):
+    if session.get("role") != "admin":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    trek = Trek.query.get_or_404(trek_id)
+
+    trek.name = request.form.get("name")
+    trek.location = request.form.get("location")
+    trek.difficulty = request.form.get("difficulty")
+    trek.duration = request.form.get("duration")
+    trek.price = request.form.get("price")
+    trek.available_slots = request.form.get("available_slots")
+    trek.assigned_staff_id = request.form.get("assigned_staff_id")
+    trek.status = request.form.get("status")
+
+    db.session.commit()
+
+    flash("Trek updated successfully.")
+
+    return redirect(url_for("main.view_treks"))
+
+
+@main.route("/admin/delete_trek/<int:trek_id>")
+def delete_trek(trek_id):
+    if session.get("role") != "admin":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    trek = Trek.query.get_or_404(trek_id)
+
+    db.session.delete(trek)
+    db.session.commit()
+
+    flash("Trek deleted successfully.")
+    return redirect(url_for("main.view_treks"))
