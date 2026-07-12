@@ -31,6 +31,9 @@ def login_post():
     if not user.check_password(password):
         flash("Invalid username or password")
         return render_template("login.html")
+    if user.role == "staff" and not user.approved:
+        flash("Your account is not approved yet. Please wait for admin approval.")
+        return render_template("login.html")
     # Login successful
     session["user_id"] = user.id
     session["role"] = user.role
@@ -56,11 +59,15 @@ def register_post():
     password = request.form.get("password")
     name = request.form.get("name")
     role = request.form.get("role")
+    print("Username:", username)
+    print("Role:", role)  # Debugging line
     
     if User.query.filter_by(username=username).first():
         flash("Username already exists")
         return render_template("register.html")
     user=User(username=username, name=name, role=role)
+    if role == "customer":
+        user.approved = True  
     user.password = password  # This will trigger the password setter and hash the password
     db.session.add(user)
     db.session.commit()
@@ -209,3 +216,67 @@ def delete_trek(trek_id):
 
     flash("Trek deleted successfully.")
     return redirect(url_for("main.view_treks"))
+
+
+
+#admin - staff management-----------------------------
+@main.route("/admin/view_staff")
+def view_staff():
+    if session.get("role") != "admin":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    staff_members = User.query.filter_by(role="staff").all()
+
+    return render_template("admin/view_staff.html", staff=staff_members)
+
+@main.route("/admin/approve_staff/<int:user_id>")
+def approve_staff(user_id):
+
+    if session.get("role") != "admin":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    user = User.query.get_or_404(user_id)
+
+    user.approved = True
+
+    db.session.commit()
+
+    flash("Staff approved successfully.")
+
+    return redirect(url_for("main.view_staff"))
+
+@main.route("/admin/view_users")
+def view_users():
+
+    if session.get("role") != "admin":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    users = User.query.filter_by(role="customer").all()
+
+    return render_template(
+        "admin/view_users.html",
+        users=users
+    )
+
+
+
+
+#staff dashboard-----------------------------
+@main.route("/staff/dashboard")
+def staff_dashboard():
+    if session.get("role") != "staff":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    user_id = session.get("user_id")
+
+    treks = Trek.query.filter_by(assigned_staff_id=user_id).all()
+
+    return render_template(
+        "staff/dashboard.html",
+        staff=User.query.get(session["user_id"]),
+        treks=treks
+    )

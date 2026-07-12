@@ -27,6 +27,7 @@ with app.app_context():
             password="admin123",
             name="Admin User",
             role="admin",
+            approved=True
         )
         db.session.add(admin)
         db.session.commit()

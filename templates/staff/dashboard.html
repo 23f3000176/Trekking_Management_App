@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}
+Staff Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<h2>
+Welcome {{ staff.name }}
+</h2>
+
+<h4 class="mt-4">
+Assigned Treks
+</h4>
+
+<table class="table table-bordered">
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+<th>Location</th>
+<th>Status</th>
+<th>Slots</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for trek in treks %}
+
+<tr>
+
+<td>{{ trek.name }}</td>
+<td>{{ trek.location }}</td>
+<td>{{ trek.status }}</td>
+<td>{{ trek.available_slots }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

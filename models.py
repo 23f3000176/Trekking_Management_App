@@ -10,6 +10,7 @@ class User(db.Model):
     passhash = db.Column(db.String(200), nullable=False)
     name = db.Column(db.String(50), nullable=False)
     role = db.Column(db.String(20), nullable=False)
+    approved = db.Column(db.Boolean, default=False)
     
     bookings = db.relationship("Booking", backref="user", lazy=True)
     staff_profile = db.relationship(
@@ -48,21 +49,15 @@ class Booking(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    user_id = db.Column(
-        db.Integer,
-        db.ForeignKey("users.id"),
-        nullable=False,
-    )
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"),nullable=False)
 
-    trek_id = db.Column(
-        db.Integer,
-        db.ForeignKey("treks.id"),
-        nullable=False,
-    )
+    trek_id = db.Column(db.Integer,db.ForeignKey("treks.id"),nullable=False)
 
     booking_date = db.Column(db.String(20), nullable=False)
     persons = db.Column(db.Integer, nullable=False)
     total_price = db.Column(db.Float, nullable=False)
+    booking_status = db.Column(db.String(20), nullable=False, default="pending")
+    payment_status = db.Column(db.String(20), nullable=False, default="unpaid")
 
 
 class StaffProfile(db.Model):
