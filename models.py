@@ -11,6 +11,7 @@ class User(db.Model):
     name = db.Column(db.String(50), nullable=False)
     role = db.Column(db.String(20), nullable=False)
     approved = db.Column(db.Boolean, default=False)
+    active = db.Column(db.Boolean, default=True)
     
     bookings = db.relationship("Booking", backref="user", lazy=True)
     staff_profile = db.relationship(
@@ -65,12 +66,7 @@ class StaffProfile(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    user_id = db.Column(
-        db.Integer,
-        db.ForeignKey("users.id"),
-        nullable=False,
-        unique=True,
-    )
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"),nullable=False,unique=True)
 
     phone = db.Column(db.String(15), nullable=False)
     experience = db.Column(db.String(50))

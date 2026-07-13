@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}
+Update Trek Status
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<h2>Update Trek Status</h2>
+
+<form method="POST"
+      action="{{ url_for('main.update_trek_status_post',
+      trek_id=trek.id) }}">
+
+<label class="form-label">
+
+Status
+
+</label>
+
+<select
+class="form-select"
+name="status">
+
+<option value="Open">Open</option>
+
+<option value="Closed">Closed</option>
+
+<option value="Started">Started</option>
+
+<option value="Ongoing">Ongoing</option>
+
+<option value="Completed">Completed</option>
+
+</select>
+
+<br>
+
+<button class="btn btn-success">
+
+Update
+
+</button>
+
+</form>
+
+</div>
+
+{% endblock %}

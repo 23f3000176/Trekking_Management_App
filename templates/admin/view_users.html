@@ -19,6 +19,7 @@ View Users
                 <th>Name</th>
                 <th>Username</th>
                 <th>Role</th>
+                <th>Action</th>
             </tr>
 
         </thead>
@@ -33,6 +34,18 @@ View Users
                 <td>{{ user.name }}</td>
                 <td>{{ user.username }}</td>
                 <td>{{ user.role }}</td>
+
+                <td>
+
+                    <a href="{{ url_for('main.deactivate_user', user_id=user.id) }}"
+                    class="btn btn-warning btn-sm"
+                    onclick="return confirm('Deactivate this user?')">
+
+                        Deactivate
+
+                    </a>
+
+                </td>
 
             </tr>
 

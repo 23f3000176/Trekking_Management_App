@@ -38,23 +38,24 @@ View Staff
 
 <td>
 
-{% if person.approved %}
+{% if not person.approved %}
 
-<span class="badge bg-success">
-Approved
-</span>
-
-{% else %}
-
-<span class="badge bg-warning">
-Pending
-</span>
+<a href="{{ url_for('main.approve_staff', user_id=person.id) }}"
+   class="btn btn-success btn-sm">
+    Approve
+</a>
 
 {% endif %}
 
-</td>
+<a href="{{ url_for('main.delete_staff', user_id=person.id) }}"
+   class="btn btn-danger btn-sm"
+   onclick="return confirm('Are you sure you want to remove this staff member?')">
 
-<td>
+    Remove
+
+</a>
+
+</td>
 
 {% if not person.approved %}
 

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Update Slots{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<h2>Update Available Slots</h2>
+
+<form method="POST"
+      action="{{ url_for('main.update_slots_post', trek_id=trek.id) }}">
+
+    <div class="mb-3">
+
+        <label class="form-label">
+
+            Available Slots
+
+        </label>
+
+        <input
+            type="number"
+            class="form-control"
+            name="available_slots"
+            value="{{ trek.available_slots }}"
+            min="0">
+
+    </div>
+
+    <button class="btn btn-success">
+
+        Update
+
+    </button>
+
+</form>
+
+</div>
+
+{% endblock %}

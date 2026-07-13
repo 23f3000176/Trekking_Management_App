@@ -12,6 +12,11 @@ Staff Dashboard
 Welcome {{ staff.name }}
 </h2>
 
+<a href="{{ url_for('main.staff_profile') }}"
+       class="btn btn-primary mb-3">
+        Update Profile
+</a>
+
 <h4 class="mt-4">
 Assigned Treks
 </h4>
@@ -26,6 +31,7 @@ Assigned Treks
 <th>Location</th>
 <th>Status</th>
 <th>Slots</th>
+<th>Action</th>
 
 </tr>
 
@@ -41,7 +47,17 @@ Assigned Treks
 <td>{{ trek.location }}</td>
 <td>{{ trek.status }}</td>
 <td>{{ trek.available_slots }}</td>
+<td>
+    <a href="{{ url_for('main.update_trek_status', trek_id=trek.id) }}"
+       class="btn btn-primary btn-sm">
+        Update Status
+    </a>
 
+    <a href="{{ url_for('main.update_slots', trek_id=trek.id) }}"
+        class="btn btn-warning btn-sm">
+        Update Slots
+</a>
+</td>
 </tr>
 
 {% endfor %}

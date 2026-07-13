@@ -38,12 +38,13 @@
                 </li>
             </ul>
 
-            <form class="d-flex ms-auto" role="search">
+            <form class="d-flex" method="GET" action="{{ url_for('main.search') }}">
                 <input class="form-control me-2"
-                       type="search"
-                       placeholder="Search Trek">
+                    type="search"
+                    name="query"
+                    placeholder="Search">
 
-                <button class="btn btn-success">
+                <button class="btn btn-outline-success">
                     Search
                 </button>
             </form>

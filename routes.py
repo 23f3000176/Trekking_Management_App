@@ -34,6 +34,10 @@ def login_post():
     if user.role == "staff" and not user.approved:
         flash("Your account is not approved yet. Please wait for admin approval.")
         return render_template("login.html")
+    
+    if not user.active:
+        flash("Your account is deactivated. Please contact the admin.")
+        return render_template("login.html")
     # Login successful
     session["user_id"] = user.id
     session["role"] = user.role
@@ -44,7 +48,7 @@ def login_post():
         return redirect(url_for("main.staff_dashboard"))
 
     else:
-        return redirect(url_for("main.home"))
+        return redirect(url_for("main.user_dashboard"))
     
 
 
@@ -193,7 +197,7 @@ def edit_trek_post(trek_id):
     trek.duration = request.form.get("duration")
     trek.price = request.form.get("price")
     trek.available_slots = request.form.get("available_slots")
-    trek.assigned_staff_id = request.form.get("assigned_staff_id")
+    trek.assigned_staff_id = request.form.get("assigned_staff")
     trek.status = request.form.get("status")
 
     db.session.commit()
@@ -278,5 +282,176 @@ def staff_dashboard():
     return render_template(
         "staff/dashboard.html",
         staff=User.query.get(session["user_id"]),
+        treks=treks
+    )
+
+@main.route("/admin/delete_staff/<int:user_id>")
+def delete_staff(user_id):
+
+    if session.get("role") != "admin":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    staff = User.query.get_or_404(user_id)
+
+    if staff.role != "staff":
+        flash("Only staff members can be removed.")
+        return redirect(url_for("main.view_staff"))
+
+    # Remove staff assignment from all treks
+    treks = Trek.query.filter_by(assigned_staff_id=staff.id).all()
+
+    for trek in treks:
+        trek.assigned_staff_id = None
+
+    db.session.delete(staff)
+    db.session.commit()
+
+    flash("Staff removed successfully.")
+
+    return redirect(url_for("main.view_staff"))
+
+
+@main.route("/admin/search")
+def search():
+
+    if session.get("role") != "admin":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    query = request.args.get("query", "").strip()
+    if not query:
+        flash("Please enter a search term.")
+        return redirect(url_for("main.admin_dashboard"))
+
+    treks = Trek.query.filter(
+        Trek.name.ilike(f"%{query}%")
+    ).all()
+
+    staff = User.query.filter(
+        User.role == "staff",
+        User.name.ilike(f"%{query}%")
+    ).all()
+
+    users = User.query.filter(
+        User.role == "customer",
+        User.name.ilike(f"%{query}%")
+    ).all()
+
+    return render_template(
+        "admin/search.html",
+        treks=treks,
+        staff=staff,
+        users=users,
+        query=query
+    )
+
+@main.route("/admin/deactivate_user/<int:user_id>")
+def deactivate_user(user_id):
+
+    if session.get("role") != "admin":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    user = User.query.get_or_404(user_id)
+
+    user.active = False
+
+    db.session.commit()
+
+    flash("User deactivated successfully.")
+
+    return redirect(url_for("main.view_users"))
+
+@main.route("/staff/update_status/<int:trek_id>")
+def update_trek_status(trek_id):
+
+    if session.get("role") != "staff":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    trek = Trek.query.get_or_404(trek_id)
+    if trek.assigned_staff_id != session["user_id"]:
+        flash("You can update only your assigned treks.")
+        return redirect(url_for("main.staff_dashboard"))
+
+    return render_template(
+        "staff/update_status.html",
+        trek=trek
+    )
+
+@main.route("/staff/update_status/<int:trek_id>", methods=["POST"])
+def update_trek_status_post(trek_id):
+
+    if session.get("role") != "staff":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    trek = Trek.query.get_or_404(trek_id)
+    if trek.assigned_staff_id != session["user_id"]:
+        flash("You can update only your assigned treks.")
+        return redirect(url_for("main.staff_dashboard"))
+
+    trek.status = request.form.get("status")
+
+    db.session.commit()
+
+    flash("Trek status updated successfully.")
+
+    return redirect(url_for("main.staff_dashboard"))
+
+
+@main.route("/staff/update_slots/<int:trek_id>")
+def update_slots(trek_id):
+
+    if session.get("role") != "staff":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    trek = Trek.query.get_or_404(trek_id)
+
+    if trek.assigned_staff_id != session["user_id"]:
+        flash("You can update only your assigned treks.")
+        return redirect(url_for("main.staff_dashboard"))
+
+    return render_template(
+        "staff/update_slots.html",
+        trek=trek
+    )
+
+@main.route("/staff/update_slots/<int:trek_id>", methods=["POST"])
+def update_slots_post(trek_id):
+
+    if session.get("role") != "staff":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    trek = Trek.query.get_or_404(trek_id)
+
+    if trek.assigned_staff_id != session["user_id"]:
+        flash("You can update only your assigned treks.")
+        return redirect(url_for("main.staff_dashboard"))
+
+    trek.available_slots = request.form.get("available_slots")
+
+    db.session.commit()
+
+    flash("Available slots updated successfully.")
+
+    return redirect(url_for("main.staff_dashboard"))
+
+
+
+@main.route("/user/dashboard")
+def user_dashboard():
+
+    if session.get("role") != "customer":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    treks = Trek.query.filter_by(status="Open").all()
+
+    return render_template(
+        "user/dashboard.html",
         treks=treks
     )
