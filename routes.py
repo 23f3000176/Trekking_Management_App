@@ -4,6 +4,8 @@ from models import Booking, Trek, User
 
 from extensions import db
 
+from datetime import datetime
+
 main = Blueprint("main", __name__)
 
 
@@ -363,6 +365,21 @@ def deactivate_user(user_id):
 
     return redirect(url_for("main.view_users"))
 
+
+@main.route("/admin/view_bookings")
+def view_bookings():
+
+    if session.get("role") != "admin":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    bookings = Booking.query.all()
+
+    return render_template(
+        "admin/view_bookings.html",
+        bookings=bookings
+    )
+
 @main.route("/staff/update_status/<int:trek_id>")
 def update_trek_status(trek_id):
 
@@ -454,4 +471,73 @@ def user_dashboard():
     return render_template(
         "user/dashboard.html",
         treks=treks
+    )
+
+
+@main.route("/user/book/<int:trek_id>")
+def book_trek(trek_id):
+
+    if session.get("role") != "customer":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    trek = Trek.query.get_or_404(trek_id)
+
+    return render_template("user/book_trek.html",trek=trek)
+
+@main.route("/user/book/<int:trek_id>", methods=["POST"])
+def book_trek_post(trek_id):
+
+    if session.get("role") != "customer":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    trek = Trek.query.get_or_404(trek_id)
+
+    existing_booking = Booking.query.filter_by(user_id=session["user_id"],trek_id=trek.id).first()
+
+    if existing_booking:
+        flash("You have already booked this trek.")
+        return redirect(url_for("main.user_dashboard"))
+
+    persons = int(request.form.get("persons"))
+    if trek.available_slots < persons:
+        flash("Not enough slots available.")
+        return redirect(url_for("main.user_dashboard"))
+
+    booking = Booking(
+        user_id=session["user_id"],
+        trek_id=trek.id,
+        booking_date=datetime.now().strftime("%Y-%m-%d"),
+        persons=persons,
+        total_price=persons * trek.price,
+        booking_status="Booked",
+        payment_status="Pending"
+    )
+
+    db.session.add(booking)
+
+    trek.available_slots -= persons
+
+    db.session.commit()
+
+    flash("Trek booked successfully!")
+
+    return redirect(url_for("main.user_dashboard"))
+
+
+@main.route("/user/my_bookings")
+def my_bookings():
+
+    if session.get("role") != "customer":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    bookings = Booking.query.filter_by(
+        user_id=session["user_id"]
+    ).all()
+
+    return render_template(
+        "user/my_bookings.html",
+        bookings=bookings
     )

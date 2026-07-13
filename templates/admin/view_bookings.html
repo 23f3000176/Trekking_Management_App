@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}
+View Bookings
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<h2>All Booking Records</h2>
+
+<table class="table table-bordered table-hover">
+
+<thead class="table-dark">
+
+<tr>
+
+<th>User</th>
+<th>Trek</th>
+<th>Booking Date</th>
+<th>Persons</th>
+<th>Total Price</th>
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for booking in bookings %}
+
+<tr>
+
+<td>{{ booking.user.name }}</td>
+
+<td>{{ booking.trek.name }}</td>
+
+<td>{{ booking.booking_date }}</td>
+
+<td>{{ booking.persons }}</td>
+
+<td>₹{{ booking.total_price }}</td>
+
+<td>{{ booking.booking_status }}</td>
+
+</tr>
+
+{% else %}
+
+<tr>
+
+<td colspan="6">
+
+No bookings available.
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}
