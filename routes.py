@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, redirect, render_template, request, session, url_for
 
-from models import Booking, Trek, User
+from models import Booking, StaffProfile, Trek, User
 
 from extensions import db
 
@@ -65,8 +65,7 @@ def register_post():
     password = request.form.get("password")
     name = request.form.get("name")
     role = request.form.get("role")
-    print("Username:", username)
-    print("Role:", role)  # Debugging line
+   
     
     if User.query.filter_by(username=username).first():
         flash("Username already exists")
@@ -287,6 +286,50 @@ def staff_dashboard():
         treks=treks
     )
 
+
+
+@main.route("/staff/profile")
+def staff_profile():
+
+    if session.get("role") != "staff":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    profile = StaffProfile.query.filter_by(
+        user_id=session["user_id"]
+    ).first()
+
+    return render_template(
+        "staff/profile.html",
+        profile=profile
+    )
+
+@main.route("/staff/profile", methods=["POST"])
+def staff_profile_post():
+
+    if session.get("role") != "staff":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    profile = StaffProfile.query.filter_by(
+        user_id=session["user_id"]
+    ).first()
+
+    if profile is None:
+        profile = StaffProfile(user_id=session["user_id"])
+        db.session.add(profile)
+
+    profile.phone = request.form.get("phone")
+    profile.experience = request.form.get("experience")
+    profile.specialization = request.form.get("specialization")
+
+    db.session.commit()
+
+    flash("Profile updated successfully.")
+
+    return redirect(url_for("main.staff_dashboard"))
+
+
 @main.route("/admin/delete_staff/<int:user_id>")
 def delete_staff(user_id):
 
@@ -465,8 +508,21 @@ def user_dashboard():
     if session.get("role") != "customer":
         flash("Access Denied!")
         return redirect(url_for("main.login"))
+    
 
-    treks = Trek.query.filter_by(status="Open").all()
+    search = request.args.get("search", "")
+    difficulty = request.args.get("difficulty", "")
+
+    treks = Trek.query.filter(Trek.status == "Open")
+
+    if search:
+        treks = treks.filter(Trek.name.ilike(f"%{search}%"))
+
+    if difficulty:
+        treks = treks.filter(Trek.difficulty == difficulty)
+
+    treks = treks.all()
+
 
     return render_template(
         "user/dashboard.html",

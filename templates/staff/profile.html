@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Staff Profile{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<h2>Update Profile</h2>
+
+<form method="POST"
+      action="{{ url_for('main.staff_profile_post') }}">
+
+    <div class="mb-3">
+        <label class="form-label">Phone</label>
+
+        <input
+            type="text"
+            class="form-control"
+            name="phone"
+            value="{{ profile.phone if profile else '' }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Experience</label>
+
+        <input
+            type="text"
+            class="form-control"
+            name="experience"
+            value="{{ profile.experience if profile else '' }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Specialization</label>
+
+        <input
+            type="text"
+            class="form-control"
+            name="specialization"
+            value="{{ profile.specialization if profile else '' }}">
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        Save Profile
+    </button>
+
+</form>
+
+</div>
+
+{% endblock %}
