@@ -21,6 +21,7 @@ My Bookings
 <th>Persons</th>
 <th>Total Price</th>
 <th>Status</th>
+<th>Action</th>
 
 </tr>
 
@@ -42,13 +43,32 @@ My Bookings
 
 <td>{{ booking.booking_status }}</td>
 
+<td>
+
+{% if booking.booking_status == "Booked" %}
+
+<a href="{{ url_for('main.cancel_booking', booking_id=booking.id) }}"
+   class="btn btn-danger btn-sm">
+
+    Cancel
+
+</a>
+
+{% else %}
+
+-
+
+{% endif %}
+
+</td>
+
 </tr>
 
 {% else %}
 
 <tr>
 
-<td colspan="5">
+<td colspan="6">
 
 No bookings found.
 

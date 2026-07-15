@@ -550,6 +550,10 @@ def book_trek_post(trek_id):
 
     trek = Trek.query.get_or_404(trek_id)
 
+    if trek.status != "Open":
+        flash("This trek is not open for booking.")
+        return redirect(url_for("main.user_dashboard"))
+
     existing_booking = Booking.query.filter_by(user_id=session["user_id"],trek_id=trek.id).first()
 
     if existing_booking:
@@ -597,3 +601,33 @@ def my_bookings():
         "user/my_bookings.html",
         bookings=bookings
     )
+
+
+@main.route("/user/cancel_booking/<int:booking_id>")
+def cancel_booking(booking_id):
+
+    if session.get("role") != "customer":
+        flash("Access Denied!")
+        return redirect(url_for("main.login"))
+
+    booking = Booking.query.get_or_404(booking_id)
+
+    if booking.user_id != session["user_id"]:
+        flash("Access Denied!")
+        return redirect(url_for("main.my_bookings"))
+
+    if booking.booking_status != "Booked":
+        flash("Booking cannot be cancelled.")
+        return redirect(url_for("main.my_bookings"))
+
+    trek = Trek.query.get(booking.trek_id)
+
+    trek.available_slots += booking.persons
+
+    booking.booking_status = "Cancelled"
+
+    db.session.commit()
+
+    flash("Booking cancelled successfully.")
+
+    return redirect(url_for("main.my_bookings"))
