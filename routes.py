@@ -11,11 +11,11 @@ main = Blueprint("main", __name__)
 
 @main.route("/")
 def home():
-    if 'user_id' not in session:
-        flash("Please log in to access this page.")
-        return render_template("login.html")
-    return render_template("home.html" , user=User.query.get(session["user_id"]))
 
+    if "user_id" in session:
+        session.clear()
+
+    return redirect(url_for("main.login"))
 
 # loginnn page =======================================
 @main.route("/login")
@@ -84,8 +84,11 @@ def register_post():
 #logout page =======================================
 @main.route("/logout")
 def logout():
-    session.pop("user_id", None)
+
+    session.clear()
+
     flash("Logged out successfully.")
+
     return redirect(url_for("main.login"))
 
 
@@ -349,7 +352,14 @@ def delete_staff(user_id):
     for trek in treks:
         trek.assigned_staff_id = None
 
+    # Delete staff profile first
+    profile = StaffProfile.query.filter_by(user_id=staff.id).first()
+    if profile:
+        db.session.delete(profile)
+
+    # Delete user
     db.session.delete(staff)
+
     db.session.commit()
 
     flash("Staff removed successfully.")
@@ -512,6 +522,8 @@ def user_dashboard():
 
     search = request.args.get("search", "")
     difficulty = request.args.get("difficulty", "")
+    print("Search:", search)
+    print("Difficulty:", difficulty)
 
     treks = Trek.query.filter(Trek.status == "Open")
 

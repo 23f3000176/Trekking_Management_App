@@ -8,79 +8,97 @@ View Staff
 
 <div class="container mt-5">
 
-<h2>Staff Members</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">🧑‍💼 Staff Management</h2>
 
-<table class="table table-bordered">
+        <a href="{{ url_for('main.admin_dashboard') }}"
+           class="btn btn-outline-dark">
+            ← Dashboard
+        </a>
+    </div>
 
-<thead>
+    <div class="card shadow border-0">
 
-<tr>
+        <div class="card-body">
 
-<th>ID</th>
-<th>Name</th>
-<th>Username</th>
-<th>Approved</th>
-<th>Action</th>
+            <table class="table table-hover table-striped align-middle mb-0">
 
-</tr>
+                <thead class="table-dark">
 
-</thead>
+                    <tr>
 
-<tbody>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Status</th>
+                        <th>Action</th>
 
-{% for person in staff %}
+                    </tr>
 
-<tr>
+                </thead>
 
-<td>{{ person.id }}</td>
-<td>{{ person.name }}</td>
-<td>{{ person.username }}</td>
+                <tbody>
 
-<td>
+                {% for person in staff %}
 
-{% if not person.approved %}
+                    <tr>
 
-<a href="{{ url_for('main.approve_staff', user_id=person.id) }}"
-   class="btn btn-success btn-sm">
-    Approve
-</a>
+                        <td>{{ person.id }}</td>
 
-{% endif %}
+                        <td>{{ person.name }}</td>
 
-<a href="{{ url_for('main.delete_staff', user_id=person.id) }}"
-   class="btn btn-danger btn-sm"
-   onclick="return confirm('Are you sure you want to remove this staff member?')">
+                        <td>{{ person.username }}</td>
 
-    Remove
+                        <td>
 
-</a>
+                            {% if person.approved %}
 
-</td>
+                                <span class="badge bg-success">
+                                    Approved
+                                </span>
 
-{% if not person.approved %}
+                            {% else %}
 
-<a href="{{ url_for('main.approve_staff', user_id=person.id) }}"
-class="btn btn-success btn-sm">
+                                <span class="badge bg-warning text-dark">
+                                    Pending
+                                </span>
 
-Approve
+                            {% endif %}
 
-</a>
+                        </td>
 
-{% else %}
+                        <td>
 
-—
+                            {% if not person.approved %}
 
-{% endif %}
+                                <a href="{{ url_for('main.approve_staff', user_id=person.id) }}"
+                                   class="btn btn-success btn-sm">
+                                    Approve
+                                </a>
 
-</td>
+                            {% endif %}
 
-</tr>
+                            <a href="{{ url_for('main.delete_staff', user_id=person.id) }}"
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Are you sure you want to remove this staff member?')">
 
-{% endfor %}
+                                Remove
 
-</tbody>
+                            </a>
 
-</table>
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 

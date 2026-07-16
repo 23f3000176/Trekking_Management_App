@@ -8,62 +8,109 @@ View Bookings
 
 <div class="container mt-5">
 
-<h2>All Booking Records</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-<table class="table table-bordered table-hover">
+        <h2 class="fw-bold">📖 Booking Records</h2>
 
-<thead class="table-dark">
+        <a href="{{ url_for('main.admin_dashboard') }}"
+           class="btn btn-outline-dark">
+            ← Dashboard
+        </a>
 
-<tr>
+    </div>
 
-<th>User</th>
-<th>Trek</th>
-<th>Booking Date</th>
-<th>Persons</th>
-<th>Total Price</th>
-<th>Status</th>
+    <div class="card shadow border-0">
 
-</tr>
+        <div class="card-body">
 
-</thead>
+            <table class="table table-hover table-striped align-middle mb-0">
 
-<tbody>
+                <thead class="table-dark">
 
-{% for booking in bookings %}
+                    <tr>
 
-<tr>
+                        <th>User</th>
+                        <th>Trek</th>
+                        <th>Booking Date</th>
+                        <th>Persons</th>
+                        <th>Total Price</th>
+                        <th>Status</th>
 
-<td>{{ booking.user.name }}</td>
+                    </tr>
 
-<td>{{ booking.trek.name }}</td>
+                </thead>
 
-<td>{{ booking.booking_date }}</td>
+                <tbody>
 
-<td>{{ booking.persons }}</td>
+                {% for booking in bookings %}
 
-<td>₹{{ booking.total_price }}</td>
+                    <tr>
 
-<td>{{ booking.booking_status }}</td>
+                        <td>{{ booking.user.name }}</td>
 
-</tr>
+                        <td>{{ booking.trek.name }}</td>
 
-{% else %}
+                        <td>{{ booking.booking_date }}</td>
 
-<tr>
+                        <td>{{ booking.persons }}</td>
 
-<td colspan="6">
+                        <td>
+                            <strong>₹{{ booking.total_price }}</strong>
+                        </td>
 
-No bookings available.
+                        <td>
 
-</td>
+                            {% if booking.booking_status == "Booked" %}
 
-</tr>
+                                <span class="badge bg-success">
+                                    Booked
+                                </span>
 
-{% endfor %}
+                            {% elif booking.booking_status == "Cancelled" %}
 
-</tbody>
+                                <span class="badge bg-danger">
+                                    Cancelled
+                                </span>
 
-</table>
+                            {% elif booking.booking_status == "Completed" %}
+
+                                <span class="badge bg-primary">
+                                    Completed
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary">
+                                    {{ booking.booking_status }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% else %}
+
+                    <tr>
+
+                        <td colspan="6" class="text-center text-muted">
+
+                            No bookings available.
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 

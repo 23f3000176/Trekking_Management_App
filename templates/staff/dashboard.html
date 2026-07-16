@@ -6,65 +6,132 @@ Staff Dashboard
 
 {% block content %}
 
-<div class="container mt-5">
+<div class="container py-5">
 
-<h2>
-Welcome {{ staff.name }}
-</h2>
+    <div class="text-center mb-5">
 
-<a href="{{ url_for('main.staff_profile') }}"
-       class="btn btn-primary mb-3">
-        Update Profile
-</a>
+        <h2 class="fw-bold">
+            🧑‍💼 Staff Dashboard
+        </h2>
 
-<h4 class="mt-4">
-Assigned Treks
-</h4>
+        <p class="text-muted">
+            Welcome, {{ staff.name }}
+        </p>
 
-<table class="table table-bordered">
+    </div>
 
-<thead>
+    <div class="mb-4">
 
-<tr>
+        <a href="{{ url_for('main.staff_profile') }}"
+           class="btn btn-success">
+            ✏️ Update Profile
+        </a>
 
-<th>Name</th>
-<th>Location</th>
-<th>Status</th>
-<th>Slots</th>
-<th>Action</th>
+    </div>
 
-</tr>
+    <div class="card shadow border-0">
 
-</thead>
+        <div class="card-header bg-dark text-white">
 
-<tbody>
+            <h4 class="mb-0">
+                🥾 Assigned Treks
+            </h4>
 
-{% for trek in treks %}
+        </div>
 
-<tr>
+        <div class="card-body">
 
-<td>{{ trek.name }}</td>
-<td>{{ trek.location }}</td>
-<td>{{ trek.status }}</td>
-<td>{{ trek.available_slots }}</td>
-<td>
-    <a href="{{ url_for('main.update_trek_status', trek_id=trek.id) }}"
-       class="btn btn-primary btn-sm">
-        Update Status
-    </a>
+            <table class="table table-hover table-striped align-middle mb-0">
 
-    <a href="{{ url_for('main.update_slots', trek_id=trek.id) }}"
-        class="btn btn-warning btn-sm">
-        Update Slots
-</a>
-</td>
-</tr>
+                <thead class="table-dark">
 
-{% endfor %}
+                    <tr>
 
-</tbody>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Available Slots</th>
+                        <th>Actions</th>
 
-</table>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for trek in treks %}
+
+                    <tr>
+
+                        <td>
+                            <strong>{{ trek.name }}</strong>
+                        </td>
+
+                        <td>{{ trek.location }}</td>
+
+                        <td>
+
+                            {% if trek.status == "Open" %}
+
+                                <span class="badge bg-success">
+                                    Open
+                                </span>
+
+                            {% elif trek.status == "Closed" %}
+
+                                <span class="badge bg-danger">
+                                    Closed
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary">
+                                    {{ trek.status }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <span class="badge bg-info text-dark">
+
+                                {{ trek.available_slots }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <a href="{{ url_for('main.update_trek_status', trek_id=trek.id) }}"
+                               class="btn btn-primary btn-sm">
+
+                                Update Status
+
+                            </a>
+
+                            <a href="{{ url_for('main.update_slots', trek_id=trek.id) }}"
+                               class="btn btn-warning btn-sm">
+
+                                Update Slots
+
+                            </a>
+                  
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 

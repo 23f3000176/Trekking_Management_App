@@ -8,52 +8,117 @@ View Users
 
 <div class="container mt-5">
 
-    <h2>Registered Users</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-    <table class="table table-bordered table-hover">
+        <h2 class="fw-bold">👥 User Management</h2>
 
-        <thead class="table-dark">
+        <a href="{{ url_for('main.admin_dashboard') }}"
+           class="btn btn-outline-dark">
+            ← Dashboard
+        </a>
 
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Action</th>
-            </tr>
+    </div>
 
-        </thead>
+    <div class="card shadow border-0">
 
-        <tbody>
+        <div class="card-body">
 
-        {% for user in users %}
+            <table class="table table-hover table-striped align-middle mb-0">
 
-            <tr>
+                <thead class="table-dark">
 
-                <td>{{ user.id }}</td>
-                <td>{{ user.name }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.role }}</td>
+                    <tr>
 
-                <td>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Action</th>
 
-                    <a href="{{ url_for('main.deactivate_user', user_id=user.id) }}"
-                    class="btn btn-warning btn-sm"
-                    onclick="return confirm('Deactivate this user?')">
+                    </tr>
 
-                        Deactivate
+                </thead>
 
-                    </a>
+                <tbody>
 
-                </td>
+                {% for user in users %}
 
-            </tr>
+                    <tr>
 
-        {% endfor %}
+                        <td>{{ user.id }}</td>
 
-        </tbody>
+                        <td>{{ user.name }}</td>
 
-    </table>
+                        <td>{{ user.username }}</td>
+
+                        <td>
+
+                            <span class="badge bg-primary">
+
+                                {{ user.role }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            {% if user.active %}
+
+                                <span class="badge bg-success">
+
+                                    Active
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-danger">
+
+                                    Inactive
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if user.active %}
+
+                                <a href="{{ url_for('main.deactivate_user', user_id=user.id) }}"
+                                   class="btn btn-warning btn-sm"
+                                   onclick="return confirm('Deactivate this user?')">
+
+                                    Deactivate
+
+                                </a>
+
+                            {% else %}
+
+                                <span class="text-muted">
+
+                                    Already Inactive
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 

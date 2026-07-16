@@ -14,11 +14,7 @@ class User(db.Model):
     active = db.Column(db.Boolean, default=True)
     
     bookings = db.relationship("Booking", backref="user", lazy=True)
-    staff_profile = db.relationship(
-        "StaffProfile",
-        backref="user",
-        uselist=False,
-    )
+    staff_profile = db.relationship("StaffProfile",backref="user",uselist=False,cascade="all, delete-orphan")
 
     @property
     def password(self):

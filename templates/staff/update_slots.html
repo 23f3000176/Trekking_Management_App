@@ -1,40 +1,76 @@
 {% extends "base.html" %}
 
-{% block title %}Update Slots{% endblock %}
+{% block title %}
+Update Slots
+{% endblock %}
 
 {% block content %}
 
-<div class="container mt-5">
+<div class="container py-5">
 
-<h2>Update Available Slots</h2>
+    <div class="row justify-content-center">
 
-<form method="POST"
-      action="{{ url_for('main.update_slots_post', trek_id=trek.id) }}">
+        <div class="col-md-6">
 
-    <div class="mb-3">
+            <div class="card shadow border-0">
 
-        <label class="form-label">
+                <div class="card-header bg-dark text-white text-center">
 
-            Available Slots
+                    <h3 class="mb-0">
+                        🎫 Update Available Slots
+                    </h3>
 
-        </label>
+                </div>
 
-        <input
-            type="number"
-            class="form-control"
-            name="available_slots"
-            value="{{ trek.available_slots }}"
-            min="0">
+                <div class="card-body p-4">
+
+                    <form method="POST"
+                          action="{{ url_for('main.update_slots_post', trek_id=trek.id) }}">
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-semibold">
+                                Available Slots
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                name="available_slots"
+                                value="{{ trek.available_slots }}"
+                                min="0"
+                                placeholder="Enter available slots">
+
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+
+                            <a href="{{ url_for('main.staff_dashboard') }}"
+                               class="btn btn-outline-dark">
+
+                                ← Dashboard
+
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="btn btn-success">
+
+                                💾 Update Slots
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
-
-    <button class="btn btn-success">
-
-        Update
-
-    </button>
-
-</form>
 
 </div>
 

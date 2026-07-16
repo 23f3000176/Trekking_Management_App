@@ -8,78 +8,122 @@ Admin Dashboard
 
 <div class="container mt-5">
 
-    <h2 class="mb-4">
-        Admin Dashboard
-    </h2>
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">👑 Admin Dashboard</h2>
+        <p class="text-muted">Welcome to Just Trek Management System</p>
+    </div>
 
-    
-    <a href="{{ url_for('main.add_trek') }}"
-       class="btn btn-primary mb-4">
-        + Add Trek
-    </a>
+    <!-- Statistics -->
 
-    
-    <a href="{{ url_for('main.view_treks') }}"
-        class="btn btn-info mb-4">
-
-        View Treks
-    </a>
-
-    <a href="{{ url_for('main.view_staff') }}"
-        class="btn btn-secondary mb-4">
-        View Staff
-    </a>
-    
-    <a href="{{ url_for('main.view_users') }}"
-        class="btn btn-info mb-4">
-         View Users
-    </a>
-
-    <a href="{{ url_for('main.view_bookings') }}"
-        class="btn btn-info">
-            View Bookings
-    </a>
-
-    <div class="row">
+    <div class="row g-4 mb-5">
 
         <div class="col-md-3">
-            <div class="card text-bg-primary shadow">
-                <div class="card-body">
-                    <h5>Total Users</h5>
-                    <h2>{{ total_users }}</h2>
+            <div class="card bg-dark text-white border-0 shadow h-100">
+                <div class="card-body text-center">
+                    <h5>👥 Users</h5>
+                    <h1 class="text-warning fw-bold">{{ total_users }}</h1>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card text-bg-success shadow">
-                <div class="card-body">
-                    <h5>Total Staff</h5>
-                    <h2>{{ total_staff }}</h2>
+            <div class="card bg-dark text-white border-0 shadow h-100">
+                <div class="card-body text-center">
+                    <h5>🧑‍💼 Staff</h5>
+                    <h1 class="text-warning fw-bold">{{ total_staff }}</h1>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card text-bg-warning shadow">
-                <div class="card-body">
-                    <h5>Total Treks</h5>
-                    <h2>{{ total_treks }}</h2>
+            <div class="card bg-dark text-white border-0 shadow h-100">
+                <div class="card-body text-center">
+                    <h5>🥾 Treks</h5>
+                    <h1 class="text-warning fw-bold">{{ total_treks }}</h1>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card text-bg-danger shadow">
-                <div class="card-body">
-                    <h5>Total Bookings</h5>
-                    <h2>{{ total_bookings }}</h2>
+            <div class="card bg-dark text-white border-0 shadow h-100">
+                <div class="card-body text-center">
+                    <h5>📖 Bookings</h5>
+                    <h1 class="text-warning fw-bold">{{ total_bookings }}</h1>
                 </div>
             </div>
         </div>
 
     </div>
 
+    <!-- Management -->
+
+    <h4 class="fw-bold mb-4">Management</h4>
+
+    <div class="row g-3">
+
+        <div class="col-md-4">
+            <a href="{{ url_for('main.add_trek') }}"
+               class="btn btn-success w-100 py-3">
+                ➕ Add Trek
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="{{ url_for('main.view_treks') }}"
+               class="btn btn-outline-dark w-100 py-3">
+                🥾 View Treks
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="{{ url_for('main.view_staff') }}"
+               class="btn btn-outline-dark w-100 py-3">
+                🧑‍💼 View Staff
+            </a>
+        </div>
+
+        <div class="col-md-6">
+            <a href="{{ url_for('main.view_users') }}"
+               class="btn btn-outline-dark w-100 py-3">
+                👥 View Users
+            </a>
+        </div>
+
+        <div class="col-md-6">
+            <a href="{{ url_for('main.view_bookings') }}"
+               class="btn btn-outline-dark w-100 py-3">
+                📖 View Bookings
+            </a>
+        </div>
+
+    </div>
+
 </div>
+
+{% endblock %}
+
+{% block style %}
+
+<style>
+
+body{
+    background:#f5f5f5;
+}
+
+.card{
+    border-radius:15px;
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-6px);
+}
+
+.btn{
+    border-radius:12px;
+    font-weight:600;
+}
+
+</style>
 
 {% endblock %}
